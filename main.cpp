@@ -5,9 +5,12 @@
 #include <QDebug>
 #include <thread>
 #include <QTime>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/opencv.hpp>
 
 using namespace std;
-//using namespace cv;
+using namespace cv;
 
 int main(int argc, char *argv[])
 {
@@ -18,8 +21,8 @@ int main(int argc, char *argv[])
    MainWindow mainWin;
    mainWin.show();
 
-//   Mat image = Mat.ones(20, 20);
-//   imshow("black",image);
+   Mat image(Size(100, 100), CV_8UC1);
+   imshow("black",image);
 
    return a.exec();
 }
