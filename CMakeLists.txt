@@ -19,13 +19,15 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #set(CMAKE_PREFIX_PATH "~/Qt5.9.9/5.9.9/gcc_64/")#为了不在Qt creator这个软件中也能CMake找到Qt的库
 
 # 1 find qt
-find_package(Qt5 COMPONENTS Widgets Gui REQUIRED)
+# D:\Qt5.12.11\5.12.11\msvc2017_64\lib 在路径里储存了所有的库，用到的都需要添加。
+find_package(Qt5 COMPONENTS Widgets Gui SerialPort REQUIRED)
 #get_target_property(QtCore_location Qt5::Widgets LOCATION)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 #get_target_property(QtCore_location Qt5::Core LOCATION)
 #find_package(pthread REQUIRED)
 # Add an executable
 #生成可执行文件
+MESSAGE("Qt_LIBS : ${Qt_LIBS}")
 
 # 2 find open cv
 #FIND_PACKAGE( OpenCV REQUIRED )
@@ -37,9 +39,9 @@ MESSAGE("OpenCV_LIB_DIR : ${OpenCV_LIB_DIR}")
 MESSAGE("OpenCV_LIBS : ${OpenCV_LIBS}")
 
 # add exe
-add_executable(reconstruction main.cpp mainwindow.cpp mainwindow.h mainwindow.ui)
-#
-target_link_libraries(reconstruction Qt5::Core Qt5::Widgets Qt5::Gui)
+add_executable(reconstruction main.cpp mainwindow.cpp mainwindow.h mainwindow.ui serialport.h serialport.cpp serialport.ui)
+# change the codes, add the neeeded libs.
+target_link_libraries(reconstruction Qt5::Core Qt5::Widgets Qt5::Gui Qt5::SerialPort)
 
 target_link_directories(reconstruction PUBLIC
     ${OpenCV_LIB_DIRS}

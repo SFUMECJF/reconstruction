@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>299</width>
-    <height>366</height>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>CMake-Qt-GUI</string>
+         <string>CMake-Qt-GUI-demo显示</string>
         </property>
        </widget>
       </item>
@@ -107,11 +107,23 @@
      <x>0</x>
      <y>0</y>
      <width>299</width>
-     <height>28</height>
+     <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>调试</string>
+    </property>
+    <addaction name="actionSerialPort"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSerialPort">
+   <property name="text">
+    <string>串口</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
