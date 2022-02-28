@@ -17,17 +17,17 @@
 #include <opencv2/opencv.hpp>
 
 // serial port
-//#include "serialport.h"
+#include "serialport.h"
 
 using namespace std;
 using namespace cv;
 
 int main(int argc, char *argv[])
 {
-//   cout << "Hello Qt-CMake!" << endl;
+   cout << "Hello Qt-CMake!" << endl;
 
    QApplication a(argc, argv);
-
+//
    MainWindow mainWin;
    mainWin.show();
 

@@ -9,6 +9,7 @@ SerialPort::SerialPort(QWidget *parent) :
 
     textstate_receive = false;
     textstate_send = false;
+    serial_buffer = "";
     setWindowTitle("个人串口助手");
     serialport = new QSerialPort;
     find_port();                    //查找可用串口
@@ -24,8 +25,37 @@ SerialPort::~SerialPort()
     delete ui;
 }
 
+// return the first index followed by 10 valid bytes
+int SerialPort::check_51(const QString serial_buffer) {
+  for (int i = 0; i < serial_buffer.size(); i++) {
+    if (serial_buffer[i] == 0x55 && i + 10 < serial_buffer.size() && serial_buffer[i + 10] == 0x55) {
+      return i;
+    }
+  }
 
-//窗口显示串口传来的数据
+  return -1;
+}
+/*
+ * 修改 ：serial_buffer
+ */
+QString SerialPort::parse_data(QString serial_buffer) {
+  // 循环选择可用的11个byte
+  while (int index = check_51(serial_buffer) != -1) {
+    // 解析数据，添加时间
+    if (serial_buffer[index + 1] == 0x53) {
+
+    }
+    // 删除前面的缓存，使用文本框里的内容作为整个原始数据
+  }
+
+
+  return serial_buffer;
+}
+/*
+ * 每一次获取数据之后，在这里进行处理。
+ * 目的：读取数据转换为 传感器的：  以及对应的时间。
+ * 储存到一个二维列表里，最后输出到文件中。
+ */
 void SerialPort::Read_Data()
 {
     QByteArray buf;
@@ -37,23 +67,32 @@ void SerialPort::Read_Data()
         {
             QString str = ui->Receive_text_window->toPlainText();
             str+=tr(buf);
-            str += "  ";
+//            str += "  ";
             ui->Receive_text_window->clear();
             ui->Receive_text_window->append(str);
         }
-        if(textstate_receive == false)   //文本模式
+        if(textstate_receive == false)   //Hex模式
         {
             QString str = ui->Receive_text_window->toPlainText();
             // byteArray 转 16进制
             QByteArray temp = buf.toHex();
             str+=tr(temp);
-            str += "  ";
+//            str += "  ";
             ui->Receive_text_window->clear();
             ui->Receive_text_window->append(str);
         }
     }
+
+    serial_buffer += QString::fromStdString(buf.toStdString());
     buf.clear();    //清空缓存区
+
+    serial_buffer = parse_data(serial_buffer);
+
+
 }
+
+
+
 
 
 //查找串口

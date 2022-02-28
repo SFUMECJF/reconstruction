@@ -19,6 +19,7 @@ class SerialPort : public QDialog
 public:
     explicit SerialPort(QWidget *parent = nullptr);
     ~SerialPort();
+        QString serial_buffer;
 
 private slots:
     void on_send_button_clicked();
@@ -40,6 +41,11 @@ private:
     void Read_Data();       //读取串口数据
     void find_port();       //查找可用串口
     void sleep(int msec);      //延时函数
+    QString parse_data(QString);
+    int check_51(QString);
+
+
+
 };
 
 #endif // SERIALPORT_H
