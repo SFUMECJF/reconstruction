@@ -10,6 +10,11 @@ SerialPort::SerialPort(QWidget *parent) :
     textstate_receive = false;
     textstate_send = false;
     serial_buffer = "";
+    angle.clear();
+    angle_speed.clear();
+    acc.clear();
+    magnetism.clear();
+
     setWindowTitle("个人串口助手");
     serialport = new QSerialPort;
     find_port();                    //查找可用串口
@@ -26,31 +31,30 @@ SerialPort::~SerialPort()
 }
 
 // return the first index followed by 10 valid bytes
-int SerialPort::check_51(const QString serial_buffer) {
+int SerialPort::check_51() {
+  qDebug() << hex << serial_buffer.toHex();
+
   for (int i = 0; i < serial_buffer.size(); i++) {
-    if (serial_buffer[i] == 0x55 && i + 10 < serial_buffer.size() && serial_buffer[i + 10] == 0x55) {
+    if (serial_buffer.at(i) == QChar(0x55) && i + 11 < serial_buffer.size() && serial_buffer.at(i + 11) == QChar(0x55)) {
+//      qDebug() << "i = " << i << "serial_buffer.at(i) = "<< hex << serial_buffer.at(i) << "serial_buffer.at(i + 1) = " << serial_buffer.at(i + 1);
       return i;
     }
   }
 
   return -1;
 }
-/*
- * 修改 ：serial_buffer
- */
-QString SerialPort::parse_data(QString serial_buffer) {
-  // 循环选择可用的11个byte
-  while (int index = check_51(serial_buffer) != -1) {
-    // 解析数据，添加时间
-    if (serial_buffer[index + 1] == 0x53) {
+// 51, 52, 53的数据都需要 / 32768，不过再乘多少量程需要分别处理
+double int2double(char high, char low) {
+  // 注意，这里的数据是补码表示的负数的高4位和低4位，所以直接用位操作。
 
-    }
-    // 删除前面的缓存，使用文本框里的内容作为整个原始数据
-  }
+  unsigned char high_byte = high;
+  unsigned char low_byte = low;
+  quint16  result_uint = (high_byte << 8) | low_byte;
+  qint16 result = *(qint16 *)&result_uint;
+  return result / 32768.0;
 
-
-  return serial_buffer;
 }
+
 /*
  * 每一次获取数据之后，在这里进行处理。
  * 目的：读取数据转换为 传感器的：  以及对应的时间。
@@ -60,10 +64,11 @@ void SerialPort::Read_Data()
 {
     QByteArray buf;
     buf = serialport->readAll();
+    temp_time = QDateTime::currentDateTime();
     if(!buf.isEmpty())          //将数据显示到文本串口
     {
 
-        if(textstate_receive == true)   //文本模式
+        if(textstate_receive)   //文本模式
         {
             QString str = ui->Receive_text_window->toPlainText();
             str+=tr(buf);
@@ -71,7 +76,7 @@ void SerialPort::Read_Data()
             ui->Receive_text_window->clear();
             ui->Receive_text_window->append(str);
         }
-        if(textstate_receive == false)   //Hex模式
+        if(!textstate_receive)   //Hex模式
         {
             QString str = ui->Receive_text_window->toPlainText();
             // byteArray 转 16进制
@@ -83,15 +88,104 @@ void SerialPort::Read_Data()
         }
     }
 
-    serial_buffer += QString::fromStdString(buf.toStdString());
+    serial_buffer += buf;
     buf.clear();    //清空缓存区
 
-    serial_buffer = parse_data(serial_buffer);
+    parse_data();
 
 
 }
+QVector<double> parse_one_record(const QByteArray &data,const double & scope) {
+  QVector<double> result;
+  result.resize(3);
+  result[0] = int2double(data[3], data[2]) * scope;
+  result[1] = int2double(data[5], data[4]) * scope;
+  result[2] = int2double(data[7], data[6]) * scope;
+//  result[3] = int2double(data[9], data[8]);
+  return result;
+}
+bool check_parity(const QByteArray & data, int index) {
+  quint8 sum = 0;
+  for (int i = index; i < index + 10; i++) {
+    sum += data[i];
+  }
+  if ((quint8)data[index + 10] ==sum) {
+    qDebug() << "sum : " << sum << "data[index + 10] : " << (quint8)data[index + 10];
+    return true;
+  }
+  else {
+    qDebug() << "sum : " << sum << "data[index + 10] : " << (quint8)data[index + 10];
+    return false;
+  }
+
+}
+/*
+ * 修改 ：serial_buffer
+ */
+void SerialPort::parse_data() {
+  // 循环选择可用的11个byte
+  int index = check_51();
+  while (index != -1) {
+    //    qDebug() << "while index = " << index;
+
+    // 解析数据，添加时间
+    // 51Q 52R 53S 54T 55U serial_buffer.at(0) serial_buffer.at(1) serial_buffer.at(2) serial_buffer.at(3)
+    // sum parity check, 绝大部分数据都是正确的。
+//    if (!check_parity(serial_buffer, index)) {
+//      qDebug() << "parity check failed  " << serial_buffer.toHex();
+//
+//    }
+    if (serial_buffer.at(index + 1) == 0x53) {
+      // parse angle
+//      qDebug() << "53";
+        angle[QDateTime::currentDateTime()] = parse_one_record(serial_buffer.mid(index), 180);
+//      double roll = int2double(serial_buffer[index + 3], serial_buffer[index + 2]) * 180;
+//      double pitch = int2double(serial_buffer[index + 5], serial_buffer[index + 4]) * 180;
+//      double yaw = int2double(serial_buffer[index + 7], serial_buffer[index + 6]) * 180;
+//      qDebug() << hex << serial_buffer.toHex();
+//      qDebug() << "roll: " << roll << " pitch: " << pitch << " yaw: " << yaw;
+    } else if (serial_buffer.at(index + 1) ==0x52) {// 角加速度  度/秒
+//      double xangle_speed = int2double(serial_buffer[index + 3], serial_buffer[index + 2]) * 2000;//2000为量程，切换了量程需要把2000替换成设置的量程
+//      double yangle_speed = int2double(serial_buffer[index + 5], serial_buffer[index + 4]) * 2000;
+       angle_speed[QDateTime::currentDateTime()] = parse_one_record(serial_buffer.mid(index), 2000);
+      //      qDebug() << "52";
+    } else if (serial_buffer.at(index + 1) == 0x51) {// 加速度 单位1g=9.8m/s2
+//      double xg = int2double(serial_buffer[index + 3], serial_buffer[index + 2]) * 16;//16为量程，切换了量程需要把16替换成设置的量程
+//      double yg = int2double(serial_buffer[index + 5], serial_buffer[index + 4]) * 16;
+//      double zg = int2double(serial_buffer[index + 7], serial_buffer[index + 6]) * 16;
+//      qDebug() << "xg: " << xg << "yg: " << yg << "zg: " << zg;
+      acc[QDateTime::currentDateTime()] = parse_one_record(serial_buffer.mid(index), 16);
+      //      qDebug() << "51";
+    } else if (serial_buffer.at(index + 1) == 0x54) {
+      // magnetism is no use
+      //      qDebug() << "54";
+    }
+
+    // 删除前面的缓存，使用文本框里的内容作为整个原始数据
+    serial_buffer = serial_buffer.mid(index + 11);
+    index = check_51();
+  }
+  auto i = angle.constBegin();
+  while (i != angle.constEnd()) {
+    qDebug() << i.key() << ": " << i.value();
+    ++i;
+  }
+
+  auto j = angle_speed.constBegin();
+  while (j != angle_speed.constEnd()) {
+    qDebug() << j.key() << ": " << j.value();
+    ++j;
+  }
+
+  auto k = acc.constBegin();
+  while (k != acc.constEnd()) {
+    qDebug() << k.key() << ": " << k.value();
+    ++k;
+  }
 
 
+
+}
 
 
 
