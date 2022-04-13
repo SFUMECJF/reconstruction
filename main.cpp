@@ -12,15 +12,15 @@
 #include "mainwindow.h"
 
 // opencv
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/opencv.hpp>
+//#include <opencv2/highgui.hpp>
+//#include <opencv2/imgproc.hpp>
+//#include <opencv2/opencv.hpp>
 
 // serial port
 #include "serialport.h"
 
 using namespace std;
-using namespace cv;
+//using namespace cv;
 
 int main(int argc, char *argv[])
 {

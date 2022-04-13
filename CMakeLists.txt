@@ -22,27 +22,27 @@ find_package(Qt5 COMPONENTS Widgets Gui SerialPort REQUIRED)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
 # 2 find open cv
-SET(OpenCV_DIR "D:/Programs/opencv/opencv/build/x64/vc15/lib")#先设置好这个目录，这回就找对opencvconfig.cmake了。
-find_package(OpenCV CONFIG REQUIRED) #
+#SET(OpenCV_DIR "D:/Programs/opencv/opencv/build/x64/vc15/lib")#先设置好这个目录，这回就找对opencvconfig.cmake了。
+#find_package(OpenCV CONFIG REQUIRED) #
 
 
-include_directories(${OpenCV_INCLUDE_DIRS})
-link_directories(${OpenCV_LIB_DIR})
+#include_directories(${OpenCV_INCLUDE_DIRS})
+#link_directories(${OpenCV_LIB_DIR})
 
 # add exe  如果想在其他ide里使用，需要把所有的.qrc和.ui文件都包含进去
 add_executable(reconstruction main.cpp mainwindow.cpp mainwindow.h mainwindow.ui serialport.h serialport.cpp serialport.ui)
 # change the codes, add the neeeded libs.
 target_link_libraries(reconstruction Qt5::Core Qt5::Widgets Qt5::Gui Qt5::SerialPort)
 
-target_link_directories(reconstruction PUBLIC
-    ${OpenCV_LIB_DIRS}
-    )
-target_link_libraries(reconstruction
-    ${OpenCV_LIBS}
-    )
-target_include_directories(reconstruction PUBLIC
-    ${OpenCV_INCLUDE_DIRS}
-    )
+#target_link_directories(reconstruction PUBLIC
+#    ${OpenCV_LIB_DIRS}
+#    )
+#target_link_libraries(reconstruction
+#    ${OpenCV_LIBS}
+#    )
+#target_include_directories(reconstruction PUBLIC
+#    ${OpenCV_INCLUDE_DIRS}
+#    )
 
 MESSAGE("--------------------")
 # qt官网找到的一些成功found到包之后的一些可能创建好的变量。
@@ -50,12 +50,12 @@ MESSAGE("Qt5Widgets_INCLUDE_DIRS : ${Qt5Widgets_INCLUDE_DIRS}")
 MESSAGE("Qt5Widgets_LIBRARIES : ${Qt5Widgets_LIBRARIES}")
 MESSAGE("Qt5Widgets_VERSION_STRING : ${Qt5Widgets_VERSION_STRING}")
 MESSAGE("Qt5Widgets_PRIVATE_INCLUDE_DIRS : ${Qt5Widgets_PRIVATE_INCLUDE_DIRS}")
-MESSAGE("OpenCV version : ${OpenCV_VERSION}")
-MESSAGE("OpenCV_LIB_DIRS : ${OpenCV_LIB_DIRS}")
-MESSAGE("OpenCV_LIBS : ${OpenCV_LIBS}")
-MESSAGE("OpenCV_DIR : ${OpenCV_DIR}")
-MESSAGE("OpenCV_LIBRARIES : ${OpenCV_LIBRARIES}")
-MESSAGE("OpenCV_INCLUDE_DIRS : ${OpenCV_INCLUDE_DIRS}")
+#MESSAGE("OpenCV version : ${OpenCV_VERSION}")
+#MESSAGE("OpenCV_LIB_DIRS : ${OpenCV_LIB_DIRS}")
+#MESSAGE("OpenCV_LIBS : ${OpenCV_LIBS}")
+#MESSAGE("OpenCV_DIR : ${OpenCV_DIR}")
+#MESSAGE("OpenCV_LIBRARIES : ${OpenCV_LIBRARIES}")
+#MESSAGE("OpenCV_INCLUDE_DIRS : ${OpenCV_INCLUDE_DIRS}")
 MESSAGE("--------------------")
 MESSAGE("C++ compiler： ${CMAKE_CXX_COMPILER}")
 MESSAGE("-----complete cmake -----")
