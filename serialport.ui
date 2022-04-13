@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SerialPort</class>
- <widget class="QDialog" name="SerialPort">
+ <widget class="QWidget" name="SerialPort">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>648</width>
-    <height>489</height>
+    <width>864</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0" rowspan="6">
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1,2">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
@@ -30,7 +30,62 @@
        </item>
       </layout>
      </item>
-     <item row="1" column="0">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>校验位：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="jiaoyan">
+         <item>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>数据位：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="bit">
+         <item>
+          <property name="text">
+           <string>8</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>5</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>6</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>7</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QLabel" name="label_2">
@@ -85,14 +140,7 @@
        </item>
       </layout>
      </item>
-     <item row="6" column="0">
-      <widget class="QPushButton" name="close_port">
-       <property name="text">
-        <string>关闭串口</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <widget class="QLabel" name="label_5">
@@ -112,17 +160,49 @@
        </item>
       </layout>
      </item>
-     <item row="7" column="0">
-      <widget class="QPushButton" name="open_port">
-       <property name="text">
-        <string>打开串口</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="open_port">
+         <property name="text">
+          <string>打开串口</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="close_port">
+         <property name="text">
+          <string>关闭串口</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="5" column="0">
-      <spacer name="verticalSpacer">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <item>
+        <widget class="QPushButton" name="save_button">
+         <property name="text">
+          <string>保存数据</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="load_button">
+         <property name="text">
+          <string>加载数据</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -132,123 +212,261 @@
        </property>
       </spacer>
      </item>
-     <item row="2" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLabel" name="label_3">
+     <item>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_8">
          <property name="text">
-          <string>数据位：</string>
+          <string>x轴角度：</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QComboBox" name="bit">
-         <item>
-          <property name="text">
-           <string>8</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>5</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>6</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>7</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="3" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLabel" name="label_4">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_9">
          <property name="text">
-          <string>校验位：</string>
+          <string>y轴角度：</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QComboBox" name="jiaoyan">
-         <item>
-          <property name="text">
-           <string>0</string>
-          </property>
-         </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>z轴角度：</string>
+         </property>
         </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="zangle"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>x轴加速度：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="xacc"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>y轴加速度：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="yacc"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>z轴加速度：</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLineEdit" name="zacc"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="yangle"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="xangle"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>x轴角速度</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>y轴角速度</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>z轴角速度</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="xangle_speed"/>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLineEdit" name="yangle_speed"/>
+       </item>
+       <item row="8" column="1">
+        <widget class="QLineEdit" name="zangle_speed"/>
        </item>
       </layout>
      </item>
     </layout>
    </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>接收窗口</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QTextEdit" name="Receive_text_window"/>
-   </item>
-   <item row="2" column="2">
-    <layout class="QHBoxLayout" name="horizontalLayout_7">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QPushButton" name="clear_button2">
-       <property name="text">
-        <string>清空数据</string>
+      <layout class="QHBoxLayout" name="horizontalLayout_10">
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>接收窗口</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTextEdit" name="Receive_text_window">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="receive_modl">
-       <property name="text">
-        <string>文本模式</string>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="clear_button2">
+         <property name="text">
+          <string>清空数据</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="receive_modl">
+         <property name="text">
+          <string>文本模式</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_9">
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>发送窗口</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTextEdit" name="send_text_window">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string>发送窗口</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1" colspan="2">
-    <widget class="QTextEdit" name="send_text_window"/>
-   </item>
-   <item row="5" column="1" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
-      <widget class="QPushButton" name="send_button">
-       <property name="text">
-        <string>发送数据</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="clear_button_1">
-       <property name="text">
-        <string>清空数据</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="send_modl">
-       <property name="text">
-        <string>文本模式</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QPushButton" name="send_button">
+         <property name="text">
+          <string>发送数据</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="clear_button_1">
+         <property name="text">
+          <string>清空数据</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="send_modl">
+         <property name="text">
+          <string>文本模式</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>

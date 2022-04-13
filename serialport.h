@@ -1,7 +1,7 @@
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
 
-#include <QDialog>
+#include <QWidget>
 #include <QDebug>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
@@ -9,12 +9,13 @@
 #include <QMessageBox>
 #include <QVector>
 #include <QPair>
+#include <QFile>
 
 namespace Ui {
 class SerialPort;
 }
 
-class SerialPort : public QDialog
+class SerialPort : public QWidget
 {
     Q_OBJECT
 
@@ -31,6 +32,8 @@ private slots:
     void on_clear_button2_clicked();
     void on_receive_modl_clicked();
     void on_send_modl_clicked();
+    void on_save_button_clicked();
+    void on_load_button_clicked();
 
 
 
@@ -49,7 +52,6 @@ private:
 
 //    QVector<QVector<double>> dof_result;// 按顺序是三轴角度，
 //    QVector<QDateTime> time_result;
-
     QDateTime temp_time;
     QMap<QDateTime,QVector<double>> angle_speed;
     QMap<QDateTime,QVector<double>> acc;

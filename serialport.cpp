@@ -2,7 +2,7 @@
 #include "ui_serialport.h"
 
 SerialPort::SerialPort(QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::SerialPort)
 {
     ui->setupUi(this);
@@ -15,14 +15,17 @@ SerialPort::SerialPort(QWidget *parent) :
     acc.clear();
     magnetism.clear();
 
-    setWindowTitle("个人串口助手");
+    setWindowTitle("医学图像调试助手");
     serialport = new QSerialPort;
     find_port();                    //查找可用串口
 
     ui->send_button->setEnabled(false);     //设置控件不可用
     ui->close_port->setEnabled(false);
 
+    // 如果名字已经是on_控件名_信号，这样的名字，那么就不需要重复连接。如果重复输入的话，只会令按下信号之后，执行两次函数。
 //    connect(this->ui->send_button, SIGNAL(clicked(bool)), this, SLOT(on_send_button_clicked()));
+//    connect(this->ui->save_button, SIGNAL(clicked(bool)), this, SLOT(on_save_button_clicked()));
+//    connect(this->ui->load_button, SIGNAL(clicked(bool)), this, SLOT(on_load_button_clicked()));
 }
 
 SerialPort::~SerialPort()
@@ -32,7 +35,7 @@ SerialPort::~SerialPort()
 
 // return the first index followed by 10 valid bytes
 int SerialPort::check_51() {
-  qDebug() << hex << serial_buffer.toHex();
+//  qDebug() << hex << serial_buffer.toHex();
 
   for (int i = 0; i < serial_buffer.size(); i++) {
     if (serial_buffer.at(i) == QChar(0x55) && i + 11 < serial_buffer.size() && serial_buffer.at(i + 11) == QChar(0x55)) {
@@ -65,7 +68,9 @@ void SerialPort::Read_Data()
     QByteArray buf;
     buf = serialport->readAll();
     temp_time = QDateTime::currentDateTime();
-    if(!buf.isEmpty())          //将数据显示到文本串口
+    bool display = false;
+    // this display operation will consume a lot of time!
+    if(!buf.isEmpty() && display)          //将数据显示到文本串口
     {
 
         if(textstate_receive)   //文本模式
@@ -137,56 +142,136 @@ void SerialPort::parse_data() {
 //    }
     if (serial_buffer.at(index + 1) == 0x53) {
       // parse angle
-//      qDebug() << "53";
+
         angle[QDateTime::currentDateTime()] = parse_one_record(serial_buffer.mid(index), 180);
-//      double roll = int2double(serial_buffer[index + 3], serial_buffer[index + 2]) * 180;
-//      double pitch = int2double(serial_buffer[index + 5], serial_buffer[index + 4]) * 180;
-//      double yaw = int2double(serial_buffer[index + 7], serial_buffer[index + 6]) * 180;
-//      qDebug() << hex << serial_buffer.toHex();
-//      qDebug() << "roll: " << roll << " pitch: " << pitch << " yaw: " << yaw;
-    } else if (serial_buffer.at(index + 1) ==0x52) {// 角加速度  度/秒
-//      double xangle_speed = int2double(serial_buffer[index + 3], serial_buffer[index + 2]) * 2000;//2000为量程，切换了量程需要把2000替换成设置的量程
-//      double yangle_speed = int2double(serial_buffer[index + 5], serial_buffer[index + 4]) * 2000;
+//        ui->
+//        ui->
+        ui->xangle->setText(QString::number(angle.last().value(0),'f', 3 ));
+        ui->yangle->setText(QString::number(angle.last().value(1),'f', 3 ));
+        ui->zangle->setText(QString::number(angle.last().value(2),'f', 3 ));
+    } else if (serial_buffer.at(index + 1) ==0x52) {// 角速度  度/秒
        angle_speed[QDateTime::currentDateTime()] = parse_one_record(serial_buffer.mid(index), 2000);
-      //      qDebug() << "52";
+       ui->xangle_speed->setText(QString::number(angle_speed.last().value(0), 'f', 3));
+       ui->yangle_speed->setText(QString::number(angle_speed.last().value(1), 'f', 3));
+       ui->zangle_speed->setText(QString::number(angle_speed.last().value(2), 'f', 3));
+
     } else if (serial_buffer.at(index + 1) == 0x51) {// 加速度 单位1g=9.8m/s2
-//      double xg = int2double(serial_buffer[index + 3], serial_buffer[index + 2]) * 16;//16为量程，切换了量程需要把16替换成设置的量程
-//      double yg = int2double(serial_buffer[index + 5], serial_buffer[index + 4]) * 16;
-//      double zg = int2double(serial_buffer[index + 7], serial_buffer[index + 6]) * 16;
-//      qDebug() << "xg: " << xg << "yg: " << yg << "zg: " << zg;
+
       acc[QDateTime::currentDateTime()] = parse_one_record(serial_buffer.mid(index), 16);
-      //      qDebug() << "51";
+      ui->xacc->setText(QString::number(acc.last().value(0), 'f', 3));
+      ui->yacc->setText(QString::number(acc.last().value(1), 'f', 3));
+      ui->zacc->setText(QString::number(acc.last().value(2), 'f', 3));
+
     } else if (serial_buffer.at(index + 1) == 0x54) {
       // magnetism is no use
-      //      qDebug() << "54";
     }
 
     // 删除前面的缓存，使用文本框里的内容作为整个原始数据
     serial_buffer = serial_buffer.mid(index + 11);
     index = check_51();
   }
-  auto i = angle.constBegin();
-  while (i != angle.constEnd()) {
-    qDebug() << i.key() << ": " << i.value();
-    ++i;
-  }
-
-  auto j = angle_speed.constBegin();
-  while (j != angle_speed.constEnd()) {
-    qDebug() << j.key() << ": " << j.value();
-    ++j;
-  }
-
-  auto k = acc.constBegin();
-  while (k != acc.constEnd()) {
-    qDebug() << k.key() << ": " << k.value();
-    ++k;
-  }
+//  auto i = angle.constBegin();
+//  while (i != angle.constEnd()) {
+//    qDebug() << i.key() << ": " << i.value();
+//    ++i;
+//  }
+//
+//  auto j = angle_speed.constBegin();
+//  while (j != angle_speed.constEnd()) {
+//    qDebug() << j.key() << ": " << j.value();
+//    ++j;
+//  }
+//
+//  auto k = acc.constBegin();
+//  while (k != acc.constEnd()) {
+//    qDebug() << k.key() << ": " << k.value();
+//    ++k;
+//  }
 
 
 
 }
 
+void save_file(const QMap<QDateTime,QVector<double>> & data, const QString & file_name) {
+  QFile file(file_name+".txt");
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    qDebug() << "open file failed";
+    return;
+  }
+  QTextStream out(&file);
+  auto i = data.constBegin();
+  while (i != data.constEnd()) {
+        out << i.key().toLocalTime().toString() << " " << i.value()[0] << " " << i.value()[1] << " " << i.value()[2] << endl;
+    ++i;
+  }
+  file.close();
+}
+
+void serialize_save(const QMap<QDateTime,QVector<double>> & data, const QString & file_name) {
+  QFile file(file_name+".dat");
+  if (!file.open(QIODevice::WriteOnly)) {
+    QMessageBox::critical(nullptr, "错误", "保存文件失败" + file_name);
+    return;
+  }
+  QDataStream out(&file);
+  out << data;
+  file.close();
+}
+
+void SerialPort::on_save_button_clicked() {
+  save_file(angle, "angle");
+  save_file(angle_speed, "angle_speed");
+  save_file(acc, "acc");
+
+  serialize_save(angle, "angle");
+  serialize_save(angle_speed, "angle_speed");
+  serialize_save(acc, "acc");
+
+  //
+  QMessageBox::information(this, "保存文件", "保存文件成功");
+
+}
+
+QMap<QDateTime, QVector<double>> load_onefile(const QString & file_name) {
+  QFile file(file_name);
+  QMap<QDateTime, QVector<double>> data;
+  if (!file.open(QIODevice::ReadOnly)) {
+    QMessageBox::critical(nullptr, "错误", "打开文件失败" + file_name);
+  }
+  else {
+    QDataStream in(&file);    // read the data serialized from the file
+    in >> data;
+  }
+
+  return data;
+}
+
+void SerialPort::on_load_button_clicked() {
+  // test
+  auto a = load_onefile("angle.dat");
+  auto b = load_onefile("acc.dat");
+  auto c = load_onefile("angle_speed.dat");
+
+    auto i = a.constBegin();
+    while (i != a.constEnd()) {
+      qDebug() << i.key() << ": " << i.value();
+      ++i;
+    }
+    qDebug() << "-----------------";
+    i = b.constBegin();
+    while (i != b.constEnd()) {
+      qDebug() << i.key() << ": " << i.value();
+      ++i;
+    }
+    qDebug() << "-----------------";
+
+    i = c.constBegin();
+    while (i != c.constEnd()) {
+      qDebug() << i.key() << ": " << i.value();
+      ++i;
+    }
+    QMessageBox::information(this, "加载", "加载成功");
+}
 
 
 //查找串口
